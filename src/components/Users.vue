@@ -2,8 +2,12 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <h1>Users</h1>
-        <hr><br><br>
+        <b-form class="w-100">
+            <b-form-input @input="searchUserHandler" v-model="searchUser" type="search" placeholder='Search...'></b-form-input>
+        </b-form>
+        <br>
+        <h5>Users</h5>
+        <hr><br>
         <button type="button" class="btn btn-success btn-sm" v-b-modal.add-user-modal>Add New</button>
         <br><br>
         <table class="table table-hover">
@@ -47,6 +51,7 @@ export default {
   data () {
     return {
       users: [],
+      searchUser: '',
       userToDelete: {
         id: null,
         username: ''
@@ -86,6 +91,18 @@ export default {
     setUserDelete (user) {
       this.userToDelete.id = user.id
       this.userToDelete.username = user.username
+    },
+    searchUserHandler () {
+      this.$http
+        .get(this.$API_URL, {
+          params: { username: this.searchUser } // unfortunately test API didnt provide ways to filter users by username or name but it was in task description
+        })
+        .then(res => {
+          this.users = res.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   created () {
