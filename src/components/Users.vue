@@ -22,7 +22,7 @@
               <td> <a :href="`mailto:${user.email}`">{{ user.email }}</a> </td>
               <td>
                 <button type="button" @click.prevent='setUserEdit(user)' v-b-modal.edit-user-modal class="btn btn-warning btn-sm"><b-icon-pencil style="color: #fff;"/></button>
-                <button type="button" class="btn btn-danger btn-sm"><b-icon-trash/></button>
+                <button type="button" @click.prevent='setUserDelete(user)' v-b-modal.delete-user-modal class="btn btn-danger btn-sm"><b-icon-trash/></button>
               </td>
             </tr>
           </tbody>
@@ -34,16 +34,23 @@
 
     <EditUserForm :user='userToEdit' :getUsers='getUsers' />
 
+    <DeleteUserForm :user='userToDelete' :getUsers='getUsers' />
+
   </div>
 </template>
 <script>
 import { BIconPencil, BIconTrash } from 'bootstrap-vue'
 import AddUserForm from './AddUserForm'
 import EditUserForm from './EditUserForm'
+import DeleteUserForm from './DeleteUserForm'
 export default {
   data () {
     return {
       users: [],
+      userToDelete: {
+        id: null,
+        username: ''
+      },
       userToEdit: {
         username: '',
         email: '',
@@ -59,7 +66,8 @@ export default {
     BIconPencil,
     BIconTrash,
     AddUserForm,
-    EditUserForm
+    EditUserForm,
+    DeleteUserForm
   },
   methods: {
     getUsers () {
@@ -74,6 +82,10 @@ export default {
     },
     setUserEdit (user) {
       this.userToEdit = user
+    },
+    setUserDelete (user) {
+      this.userToDelete.id = user.id
+      this.userToDelete.username = user.username
     }
   },
   created () {
